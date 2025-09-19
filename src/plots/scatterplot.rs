@@ -1,8 +1,8 @@
 use bon::bon;
 
 use plotly::{
-    common::{Marker as MarkerPlotly, Mode},
-    Layout as LayoutPlotly, Scatter, Trace,
+    common::{Line as LinePlotly, Marker as MarkerPlotly, Mode},
+    Layout as LayoutPlotly, Plot as PlotlyPlot, Scatter, Trace,
 };
 
 use polars::frame::DataFrame;
@@ -209,7 +209,6 @@ impl ScatterPlot {
                     let subset = Self::filter_data_by_group(data, group_col, group);
 
                     let trace = Self::create_trace(&subset, x, y, Some(group), marker);
-
                     traces.push(trace);
                 }
             }
@@ -227,7 +226,6 @@ impl ScatterPlot {
                 );
 
                 let trace = Self::create_trace(data, x, y, group, marker);
-
                 traces.push(trace);
             }
         }
@@ -254,6 +252,13 @@ impl ScatterPlot {
         }
 
         trace
+    }
+
+    pub fn to_plotly(&self) -> PlotlyPlot {
+        let mut plot = PlotlyPlot::new();
+        plot.set_layout(self.layout.clone());
+        plot.add_traces(self.traces.clone());
+        plot
     }
 }
 
